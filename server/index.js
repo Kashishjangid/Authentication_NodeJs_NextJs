@@ -3,11 +3,13 @@ const mongoose = require('mongoose')
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const port = 3000
-require('dotenv').config()
 const fs = require('fs');
 const path = require('path');
+const userRoutes = require('./Routes/userRoutes');
+const userData = require('./Routes/userData');
 
-mongoose.connect('mongodb+srv://kashishjangid:kashishjangid123@cluster0.mbxux9e.mongodb.net/SkillVibe', {
+console.log(userRoutes);
+mongoose.connect('mongodb+srv://kashishjangid:kashishjangid123@cluster0.mbxux9e.mongodb.net/Authentication', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -31,6 +33,9 @@ app.use(cors())
 app.get('/', async (req, res) => {
     res.send('Welcome to my world...')
 });
+
+app.use(userRoutes);
+app.use(userData);
 
 // Get port from environment and store in Express.
 
