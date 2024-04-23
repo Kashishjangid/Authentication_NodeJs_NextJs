@@ -79,7 +79,7 @@ const Login = async(req,res)=>{
 
 const findUser = async (req, res) => {
     const userid = req.params._id;
-    const email = req.query.email || req.body.email; // Look for email in query parameters and then in request body
+    const email = req.query.email || req.body.email; 
 
     try {
         let user;
@@ -103,29 +103,33 @@ const findUser = async (req, res) => {
 }
 
 
-const userUpdate = async(req,res)=>{
+const userUpdate = async (req, res) => {
+    const { _id } = req.params;
+    const { firstname, lastname, email } = req.body;
 
     try {
-        const userid = req.params._id;
-    const user =await userModel.findById(userid);
-    if(!user) return res.json("user not found");
-    const {firstname,lastname,email} = req.body;
-    user.firstname = firstname;
-    user.lastname = lastname;
-    user.email = email;
+        const user = await userModel.findByIdAndUpdate(
+            { _id }, 
+            { firstname, lastname, email }, 
+            { new: true } 
+        );
 
-    await user.save();
-    return res.send("user updated successfully",user)
-    
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        return res.status(200).json({ message: 'User updated successfully', user });
     } catch (error) {
-        res.send("internal server",error)
+        console.error('Error updating user:', error);
+        return res.status(500).json({ error: 'Internal server error' });
     }
+};
 
    
 
   
   
-}
+
 
 
 
