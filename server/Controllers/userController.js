@@ -42,6 +42,7 @@ const Login = async(req,res)=>{
             if(!passwordMatch){
                 return res.status(400).json({error : "Invalid password"})
             }
+          
             else{
                 const token = jwt.sign({ userId: user._id }, 'secret_key', { expiresIn: 60 });
                 const response = {
@@ -59,7 +60,79 @@ const Login = async(req,res)=>{
     }
 }
 
+// const findUser = async (req,res)=>{
+// const {_id} = req.params
+
+
+// try {
+//     const user = await userModel.findById({_id});
+
+//   if(!user) return res.json({msg:"user not found"});
+  
+
+//    return res.json({msg:"user found ",user})
+// } catch (error) {
+//     return res.json({msg:"internal server",error})
+// }
+
+// }
+
+const findUser = async (req, res) => {
+    const userid = req.params._id;
+    const email = req.query.email || req.body.email; // Look for email in query parameters and then in request body
+
+    try {
+        let user;
+        if (userid) {
+            user = await userModel.findById(userid);
+        } else if (email) {
+            user = await userModel.findOne({ email: email });
+        } else {
+            return res.status(400).json({ msg: "Please provide either user ID or email." });
+        }
+
+        if (!user) {
+            return res.json({ msg: "User not found." });
+        }
+
+        return res.json({ msg: "User found", user });
+    } catch (error) {
+        console.error("Error finding user:", error);
+        return res.status(500).json({ msg: "Internal server error. Failed to find user." });
+    }
+}
+
+
+const userUpdate = async(req,res)=>{
+
+    try {
+        const userid = req.params._id;
+    const user =await userModel.findById(userid);
+    if(!user) return res.json("user not found");
+    const {firstname,lastname,email} = req.body;
+    user.firstname = firstname;
+    user.lastname = lastname;
+    user.email = email;
+
+    await user.save();
+    return res.send("user updated successfully",user)
+    
+    } catch (error) {
+        res.send("internal server",error)
+    }
+
+   
+
+  
+  
+}
+
+
+
+
 module.exports ={
     Registration,
-    Login
+    Login,
+    findUser, 
+    userUpdate
 }
