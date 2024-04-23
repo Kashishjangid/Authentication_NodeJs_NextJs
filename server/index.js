@@ -1,10 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose')
-const bodyParser = require('body-parser');
+
 const cors = require('cors');
 const port = 3000
-const fs = require('fs');
-const path = require('path');
+
 const userRoutes = require('./Routes/userRoutes');
 const userData = require('./Routes/userData');
 
@@ -25,7 +24,8 @@ db.once('open', () => {
 const app = express();
 
 // Middleware
-app.use(bodyParser.json());
+
+app.use(express.json())
 
 // Set up CORS  
 app.use(cors())
@@ -47,8 +47,3 @@ const server = app.listen(port, () => {
 });
 
 
-// Connect to MongoDB
-// const DATABASE_URL = process.env.DB_URL || 'mongodb+srv://kashishjangid:kashishjangid123@cluster0.mbxux9e.mongodb.net/'
-// const DATABASE = process.env.DB || 'Authentication'
-
-// db(DATABASE_URL, DATABASE);

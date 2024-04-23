@@ -28,11 +28,10 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 6 // Minimum password length validation
   },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
-});
+  
+},
+{timestamps:true}
+);
 
 // Create User Model
 const User = mongoose.model('User', userSchema);
